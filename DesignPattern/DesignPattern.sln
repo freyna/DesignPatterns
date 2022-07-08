@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignPattern", "DesignPatt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignPatternASP", "DesignPatternASP\DesignPatternASP.csproj", "{645D25CC-1434-4542-B4DB-377D3D82039B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tools", "Tools\Tools.csproj", "{5D4D62A0-C54E-4FE2-AD71-D785FDB92D7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{645D25CC-1434-4542-B4DB-377D3D82039B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{645D25CC-1434-4542-B4DB-377D3D82039B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{645D25CC-1434-4542-B4DB-377D3D82039B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D4D62A0-C54E-4FE2-AD71-D785FDB92D7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D4D62A0-C54E-4FE2-AD71-D785FDB92D7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D4D62A0-C54E-4FE2-AD71-D785FDB92D7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D4D62A0-C54E-4FE2-AD71-D785FDB92D7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
