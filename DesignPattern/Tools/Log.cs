@@ -4,15 +4,18 @@
     {
         private static Log instance = null;
         private string Path;
-
+        private static object protect = new object();
         public static Log GetInstance (string path)
         {
-            if(instance == null)
+            lock (protect)
             {
-                instance = new Log (path);
-            }
+                if (instance == null)
+                {
+                    instance = new Log(path);
+                }
 
-            return instance;
+                return instance;
+            }
         }
 
         private Log(string path)
