@@ -8,11 +8,16 @@ namespace DesignPatternASP.Controllers
     [ApiController]
     public class ProductDetailController : ControllerBase
     {
+        private LocalEarnFactory localEarnFactory;
+        private ForeignEarnFactory foreignEarnFactory;
+        public ProductDetailController(LocalEarnFactory localEarnFactory,
+            ForeignEarnFactory foreignEarnFactory)
+        {
+            this.localEarnFactory = localEarnFactory;
+            this.foreignEarnFactory = foreignEarnFactory;
+        }
         public IActionResult Index(decimal total)
         {
-            LocalEarnFactory localEarnFactory = new LocalEarnFactory(0.20m);
-            ForeignEarnFactory foreignEarnFactory = new ForeignEarnFactory(0.30m, 20);
-
             var localEarn = localEarnFactory.GetEarn();
             var foreignEarn = foreignEarnFactory.GetEarn();
 

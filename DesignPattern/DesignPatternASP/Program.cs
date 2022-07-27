@@ -1,4 +1,6 @@
 using DesignPatternASP.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Tools.Earn;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,21 @@ builder.Services.AddSwaggerGen();
 var configuration = builder.Configuration;
 
 builder.Services.Configure<MyConfig>(builder.Configuration.GetSection("MyConfig"));
+
+//Inyección de dependencias
+//AddTransient indica que siempre habrá una nueva instancia cuando se solicite.
+builder.Services.AddTransient((x) =>
+{
+    return new LocalEarnFactory(builder.Configuration.GetSection("MyConfig").GetValue<decimal>("LocalPercentage"));
+});
+
+builder.Services.AddTransient((x) =>
+{
+    return new ForeignEarnFactory(
+        builder.Configuration.GetSection("MyConfig").GetValue<decimal>("ForeignPorcentage"),
+        builder.Configuration.GetSection("MyConfig").GetValue<decimal>("Extra")
+        );
+});
 
 var app = builder.Build();
 
