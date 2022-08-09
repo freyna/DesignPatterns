@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DesignPattern.Models\DesignPattern.Models.csproj" />
+    <ProjectReference Include="..\DesignPattern.Repository\DesignPattern.Repository.csproj" />
     <ProjectReference Include="..\Tools\Tools.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,7 @@
+using DesignPattern.Models.Models;
+using DesignPattern.Repository;
 using DesignPatternASP.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tools.Earn;
 
@@ -30,6 +33,14 @@ builder.Services.AddTransient((x) =>
         builder.Configuration.GetSection("MyConfig").GetValue<decimal>("Extra")
         );
 });
+
+builder.Services.AddDbContext<DesignPatternContext>(x =>
+{
+    x.UseSqlServer(builder.Configuration.GetConnectionString("RepositoryConnection"));
+});
+
+//AddScoped indica que habrá una única instancia por controlador.
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 var app = builder.Build();
 
