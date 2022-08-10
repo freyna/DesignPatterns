@@ -18,30 +18,33 @@ namespace DesignPattern.Repository
             //Nos permite asignar cualquier entidad del context.
             this.dbSet = context.Set<TEntity>();
         }
-        public void Add(TEntity data)
+        public async Task Add(TEntity data)
         {
-            dbSet.Add(data);
+            await dbSet.AddAsync(data);
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
-            var entity = dbSet.Find(id);
+            var entity = await dbSet.FindAsync(id);
+
+            if (entity == null) return;
+
             dbSet.Remove(entity);
         }
 
-        public TEntity Get(int id)
+        public async Task<TEntity> Get(int id)
         {
-            return dbSet.Find(id);
+            return await dbSet.FindAsync(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return dbSet.ToList();
+            return await dbSet.ToListAsync();
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public void Update(TEntity data)

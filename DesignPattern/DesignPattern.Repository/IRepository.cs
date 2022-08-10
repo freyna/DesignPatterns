@@ -8,11 +8,11 @@ namespace DesignPattern.Repository
 {
     public interface IRepository<TEntity>
     {
-        IEnumerable<TEntity> GetAll();
-        TEntity Get(int id);
-        void Add(TEntity data);
-        void Delete(int id);
+        Task<IEnumerable<TEntity>> GetAll();
+        Task<TEntity> Get(int id);
+        Task Add(TEntity data);
+        Task Delete(int id);
         void Update(TEntity data);
-        void Save();
+        Task Save();
     }
 }
