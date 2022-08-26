@@ -2,34 +2,17 @@
 using DesignPattern._01Singleton;
 using DesignPattern.Models;
 using DesignPattern.RepositoryPattern;
+using DesignPattern.Strategy;
 using DesignPattern.UnitOfWork;
 
-var log = Log.Instance;
+var context = new ContextStrategy(new AutoStrategy());
 
-await log.Save("a");
-await log.Save("b");
+context.run();
 
-using (var context = new DesignPatternContext())
-{
-    var unitOfWork = new UnitOfWork(context);
-    var repository = new Repository<Beer>(context);
+// Ahora cambiamos el tipo de contexto
+context.Strategy = new MotoStrategy();
+context.run();
 
-    var newBeer = new Beer
-    {
-        Name = "Heineken",
-        Style = "Natural"
-    };
-
-    repository.Add(newBeer);
-
-    await unitOfWork.Save();
-
-    var beers = repository.GetAll();
-
-    foreach(var beer in beers)
-    {
-        Console.WriteLine(beer.Name);
-    }
- }
-
-
+// Nuevamente cambiamos el tipo de contexto para manejar otro comportamiento
+context.Strategy = new BicicletaStrategy();
+context.run();
