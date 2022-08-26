@@ -1,6 +1,7 @@
 ﻿using DesignPattern.Models.Models;
 using DesignPattern.Repository;
 using DesignPatternASP.Configuration;
+using DesignPatternASP.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -12,11 +13,15 @@ namespace DesignPatternASP.Controllers
     {
         private readonly IOptions<MyConfig> config;
         private readonly IRepository<Beer> repository;
-        public BeerController(IOptions<MyConfig> config, IRepository<Beer> repository)
+
+        private readonly IUnitOfWork unitOfWork;
+        public BeerController(IOptions<MyConfig> config, IRepository<Beer> repository, IUnitOfWork unitOfWork)
         {
             this.config = config;
             this.repository = repository;
+            this.unitOfWork = unitOfWork;
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBeerById(int id)
         {
@@ -32,7 +37,7 @@ namespace DesignPatternASP.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllBeers()
         {
-            var beers = await repository.GetAll();
+            var beers = await unitOfWork.Beers.GetAll();
 
             if (beers == null) return NotFound();
 
@@ -40,18 +45,44 @@ namespace DesignPatternASP.Controllers
 
             foreach (var beer in beers)
             {
-                listOutputs.Add($"Id: {beer.BeerId} | Name: {beer.Name} | Style: {beer.Style}");
+                listOutputs.Add($"Id: {beer.BeerId} | Name: {beer.Name} | Style: {beer.Style} | Brand: {beer.Brand.Name}") ;
             }
 
             return Ok(listOutputs);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBeer([FromBody] Beer beer)
+        public async Task<IActionResult> CreateBeer([FromBody] BeerViewModel beer)
         {
-            await repository.Add(beer);
+            Guid brandId;
 
-            await repository.Save();
+            if (string.IsNullOrEmpty(beer.BrandId))
+            {
+                var newBrand = new Brand
+                {
+                    BrandId = Guid.NewGuid(),
+                    Name = beer.OtherBrand
+                };
+
+                brandId = newBrand.BrandId;
+
+                await unitOfWork.Brands.Add(newBrand);
+            }
+            else
+            {
+                brandId = Guid.Parse(beer.BrandId);
+            }
+
+            var newBeer = new Beer
+            {
+                Name = beer.Name,
+                Style = beer.Style,
+                BrandId = brandId
+            };
+
+            await unitOfWork.Beers.Add(newBeer);
+
+            await unitOfWork.Save();
 
             return Ok($"Beer {beer.Name}, style {beer.Style} was added");
         }

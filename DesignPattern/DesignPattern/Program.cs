@@ -2,6 +2,7 @@
 using DesignPattern._01Singleton;
 using DesignPattern.Models;
 using DesignPattern.RepositoryPattern;
+using DesignPattern.UnitOfWork;
 
 var log = Log.Instance;
 
@@ -10,17 +11,18 @@ await log.Save("b");
 
 using (var context = new DesignPatternContext())
 {
+    var unitOfWork = new UnitOfWork(context);
     var repository = new Repository<Beer>(context);
 
     var newBeer = new Beer
     {
-        Name = "Otra cerveza 2",
+        Name = "Heineken",
         Style = "Natural"
     };
 
     repository.Add(newBeer);
 
-    repository.Save();
+    await unitOfWork.Save();
 
     var beers = repository.GetAll();
 

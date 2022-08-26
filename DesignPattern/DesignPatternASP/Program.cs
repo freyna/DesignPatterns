@@ -41,6 +41,7 @@ builder.Services.AddDbContext<DesignPatternContext>(x =>
 
 //AddScoped indica que habrá una única instancia por controlador.
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
 var app = builder.Build();
 

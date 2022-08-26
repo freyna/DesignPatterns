@@ -21,7 +21,10 @@ namespace DesignPattern.Models.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+            if (!optionsBuilder.IsConfigured)
+            {
+
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,11 +40,19 @@ namespace DesignPattern.Models.Models
                 entity.Property(e => e.Style)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Brand)
+                    .WithMany(p => p.Beers)
+                    .HasForeignKey(d => d.BrandId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Beer__BrandId__6E01572D");
             });
 
             modelBuilder.Entity<Brand>(entity =>
             {
                 entity.ToTable("Brand");
+
+                entity.Property(e => e.BrandId).ValueGeneratedNever();
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(50)
