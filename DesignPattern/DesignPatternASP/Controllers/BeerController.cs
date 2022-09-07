@@ -2,6 +2,7 @@
 using DesignPattern.Repository;
 using DesignPatternASP.Configuration;
 using DesignPatternASP.Models;
+using DesignPatternASP.Strategy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -54,35 +55,13 @@ namespace DesignPatternASP.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateBeer([FromBody] BeerViewModel beer)
         {
-            Guid brandId;
+            if(beer == null) return NotFound();
 
-            if (string.IsNullOrEmpty(beer.BrandId))
-            {
-                var newBrand = new Brand
-                {
-                    BrandId = Guid.NewGuid(),
-                    Name = beer.OtherBrand
-                };
+            var context = string.IsNullOrEmpty(beer.BrandId) 
+                ? new ContextStrategy(new BeerNewBrand()) 
+                : new ContextStrategy(new BeerWithBrand());
 
-                brandId = newBrand.BrandId;
-
-                await unitOfWork.Brands.Add(newBrand);
-            }
-            else
-            {
-                brandId = Guid.Parse(beer.BrandId);
-            }
-
-            var newBeer = new Beer
-            {
-                Name = beer.Name,
-                Style = beer.Style,
-                BrandId = brandId
-            };
-
-            await unitOfWork.Beers.Add(newBeer);
-
-            await unitOfWork.Save();
+            await context.Add(beer, unitOfWork);
 
             return Ok($"Beer {beer.Name}, style {beer.Style} was added");
         }
